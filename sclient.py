@@ -26,6 +26,8 @@ def client(ip, port, message):
         print(s)
         print(s.encode("utf-8"))
         print(binascii.hexlify(s.encode("utf-8")))
+        
+        
     except socket.error:
         sock.close()
     finally:
@@ -33,8 +35,12 @@ def client(ip, port, message):
 
 
 if __name__ == "__main__":
-    message = "d1:ad2:id20:" + "abcdefghij0123456789" +\
+    message = "d1:ad2:id20:" + "abcdefghij01234567896" +\
               "e1:q4:ping1:t2:aa1:y1:qe"
+    messagef = "d1:ad2:id20:abcdefghij01234567896:target20:" +\
+               "mnopqrstuvwxyz123456e1:q9:find_node1:t2:aa1:y1:qe"
 
     # client("127.0.0.1", 6881, "H1")
-    client("router.bittorrent.com", 6881, message)
+    # client("router.bittorrent.com", 6881, message)
+    # client("router.bittorrent.com", 6881, message)
+    client("router.bittorrent.com", 6881, messagef)
