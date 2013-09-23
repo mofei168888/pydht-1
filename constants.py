@@ -1,9 +1,18 @@
 # K is closest good nodes
 K = 8
+
+# node id length
 ID_BITS = 128
-udp_send_timeout = 20
 
-BOOTSTRAP_NODES = [("dht.transmissionbt.com", 6881),
-                   ("router.utorrent.com", 6881)]
+# Bootstrap nodes
+BOOTSTRAP_NODES = [("router.utorrent.com", 6881, ""),
+                   ("dht.transmissionbt.com", 6881, "")
+                   ]
 
-dht_port = 6881
+# dht config
+DHT_ADDRESS= ("localhost", 6881)
+
+# database config
+DB_ADDRESS = "mongodb://localhost:27017/"
+DB = "dhtdb"
+ACTIVENODES = "activenodes"

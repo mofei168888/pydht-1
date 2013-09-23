@@ -1,23 +1,10 @@
+from pymongo import MongoClient
 
 
-def port_ntol(s):
-    p = []
-    q = []
-    for i in s:
-        b = bin(i).replace("0b", "")
-        p.append(b)
+client = MongoClient("localhost", 27017)
 
-    for i in p:
-        while len(i) < 8:
-            i = "0" + i
-        q.append(i)
+db = client["dht-database"]
 
-    s = "0b" + q[1] + q[0]
-
-    return int(s, 2)
-            
-
-
-s = b'\xc2^'
-
-print(port_ntol(s))
+dbactivelist = db["activelist"]
+activelist_id = dbactivelist.insert({"host": "192.1368.120.12"})
+print(activelist_id)

@@ -31,7 +31,7 @@ def port_ntol(s):
             i = "0" + i
         q.append(i)
 
-    s = "0b" + q[1] + q[0]
+    s = "0b" + q[0] + q[1]
 
     return int(s, 2)
 

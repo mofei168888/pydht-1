@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+#coding:utf-8
 import socket
 import hashlib
 import b
@@ -43,4 +44,4 @@ if __name__ == "__main__":
     # client("127.0.0.1", 6881, "H1")
     # client("router.bittorrent.com", 6881, message)
     # client("router.bittorrent.com", 6881, message)
-    client("router.bittorrent.com", 6881, messagef)
+    client("5.135.197.215", 51413, messagef)
