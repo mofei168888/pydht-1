@@ -36,8 +36,10 @@ class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
         # print(message)
         id = message["r"]["id"]
         n = node.Node(client_address[0], client_address[1], id)
-        
-        self.server.dht.db_op.insert("activenodes", {"host": n.host, "port": n.port, "id": n.id})
+        try:
+            self.server.dht.db_op.insert("activenodes", {"host": n.host, "port": n.port, "id": n.id})
+        except:
+            pass
         if message['y'] == 'q':
             self.handle_query(n, message)
         elif message["y"] == "r":
