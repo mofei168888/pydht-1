@@ -2,18 +2,13 @@
 import socketserver
 import threading
 import time
-import sched
-import sqlite3
 import b
 import node
 import math
-import binascii
 import hashing
 import constants
 import dbop
 
-
-s = sched.scheduler(time.time,time.sleep)
 
 class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
 
@@ -111,9 +106,6 @@ class DHT(object):
         t = threading.Timer(1, self.sched_find, (n, ))
         t.start()
             
-
-            
-
     
     def sched_find(self, n):
         boot_node = node.Node(n[0], n[1], 0)
