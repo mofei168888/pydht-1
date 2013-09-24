@@ -17,16 +17,15 @@ class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
         data = data.decode("latin-1")
         # sock = self.request[1]
         client_address = self.client_address
-        print("connecting:", client_address)
-        print("re:", data)
+        # print("connecting:", client_address)
 
         if not data:
             return None
         else:
             self.server.dht.findlist.activelist_append(client_address)
             
-        print("activelist length:", len(self.server.dht.findlist.activelist))
-        print("activelist:", self.server.dht.findlist.activelist)
+        # print("activelist length:", len(self.server.dht.findlist.activelist))
+        # print("activelist:", self.server.dht.findlist.activelist)
         try:
             message = b.bdecode(data)
         except:
@@ -59,17 +58,13 @@ class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
 
     def handle_response(self, node, message):
         if "nodes" in message["r"]:
-            print("r_find_nodes")
+            # print("r_find_nodes")
             nodes = message["r"]["nodes"]
             nodes = hashing.split_nodes(nodes)
-            print(nodes)
-            
+          
             self.server.dht.findlist.extend(nodes)
-            print(len(self.server.dht.findlist.list))
-            print(self.server.dht.findlist.list)
         
-
-
+        
 class DHTUDPServer(socketserver.ThreadingMixIn, socketserver.UDPServer):
     pass
 
@@ -78,7 +73,7 @@ class DHT(object):
     def __init__(self, host, port, id=None):
         if not id:
             id = hashing.random_id()
-            id = hashing.hash_function("3")
+            id = hashing.hash_function("3123123")
         self.node = node.Node(host, port, id)
         self.data = {}
         self.join_nodes = constants.BOOTSTRAP_NODES
@@ -94,15 +89,12 @@ class DHT(object):
            
     def bootstrap(self):
         l = len(self.findlist.list)
-        print("lenght:", l)
         n = ()
         try:  
             n = self.findlist.list.pop()
         except:
-            print("start: ------------------------------------------------------")
-
+            # print("start: ------------------------------------------------------")
             self.findlist.extend(constants.BOOTSTRAP_NODES)
-            print(self.findlist.list)
             n = self.findlist.list.pop()
             
         t = threading.Timer(1, self.sched_find, (n, ))
