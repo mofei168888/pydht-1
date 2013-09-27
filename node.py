@@ -15,7 +15,8 @@ class Node(object):
 
     def _sendmessage(self, message, sock=None, address=None, lock=None):
         message = b.bencode(message)
-        print(address)
+        # print(address)
+        # print(message)
         if sock:
             sock.sendto(bytes(message.encode()), address)
 
@@ -25,8 +26,10 @@ class Node(object):
     def find_node(self, id, sock=None, node=None, lock=None):
         message = {"t": "aa", "y": "q", "q": "find_node"}
         messagea = {}
-        messagea["id"] = str(self.id.decode("latin"))
-        messagea["target"] = str(self.id.decode("latin"))
+#         messagea["id"] = str(self.id.decode("latin"))
+#         messagea["target"] = str(self.id.decode("latin"))
+        messagea["id"] = str(self.id, "latin-1")
+        messagea["target"] = str(id, "latin-1")
         message["a"] = messagea
         if node:
             address = node.address()

@@ -2,7 +2,7 @@
 K = 8
 
 # node id length
-ID_BITS = 128
+ID_BITS = 160
 
 # Bootstrap nodes
 BOOTSTRAP_NODES = [("router.utorrent.com", 6881, ""),

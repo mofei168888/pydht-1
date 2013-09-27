@@ -1,5 +1,4 @@
 #! /usr/bin/env python3
-#encoding:utf-8
 import random
 import hashlib
 import binascii
@@ -13,6 +12,11 @@ def random_id(seed=None):
     if seed:
         random.seed(seed)
     return random.randint(0, (2 ** constants.ID_BITS) - 1)
+
+
+def create_ids(count):
+    piece = int((2 ** constants.ID_BITS - 1) / count)
+    return [piece * c for c in range(1, count+1)]
 
 
 def hash_function(data):
@@ -52,9 +56,6 @@ def split_nodes(nodes):
 
 
 if __name__ == "__main__":
-    id = random_id()
-    print(id)
-    hashid = hash_function(id)
-    print(hashid)
-    print(len(hashid))
-    print(split_nodes("dd"))
+    ids = create_ids(100)
+    print(ids)
+    print(len(ids))

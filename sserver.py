@@ -1,24 +1,34 @@
-#coding:utf-8
 import socketserver
 import threading
 import time
 import b
 import node
 import math
+import logging
 import hashing
 import constants
 import dbop
 
 
+FORMAT = "%(asctime)-15s %(levelname)s %(lineno)d %(funcName)s %(thread)d " + \
+           "%(message)s"
+logging.basicConfig(filename="log.txt",
+                    filemode="w",
+                    format=FORMAT)
+logger = logging.getLogger("sserver")
+
+logger.setLevel(logging.INFO)
+logger.debug("debug start -------------------------------------")
+
 class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
 
     def handle(self):
-        data = self.request[0].strip()
-        data = data.decode("latin-1")
+        odata = self.request[0].strip()
+        data = odata.decode("latin-1")
         # sock = self.request[1]
         client_address = self.client_address
-        # print("connecting:", client_address)
-
+        print("connecting:", client_address)
+        logger.debug("connecting: %s", client_address)
         if not data:
             return None
         else:
@@ -29,20 +39,32 @@ class DHTUDPRequestHandler(socketserver.DatagramRequestHandler):
         try:
             message = b.bdecode(data)
         except:
-            print("error")
+            print("b.bdeconde error")
+            return None
+        if message is None:
+            print(odata)
             return None
 
-        # print(message)
-        id = message["r"]["id"]
-        n = node.Node(client_address[0], client_address[1], id)
-        try:
-            self.server.dht.db_op.insert("activenodes", {"host": n.host, "port": n.port, "id": n.id})
-        except:
-            pass
         if message['y'] == 'q':
+            logger.info("q: %s %s", client_address, message["q"])
+            id = message["r"]["id"]
+            n = node.Node(client_address[0], client_address[1], id)
             self.handle_query(n, message)
+            
         elif message["y"] == "r":
+            id = message["r"]["id"]
+            n = node.Node(client_address[0], client_address[1], id)
+            try:
+                self.server.dht.db_op.insert("activenodes", 
+                                             {"host": n.host, 
+                                              "port": n.port, 
+                                              "id": n.id})
+            except:
+                pass
             self.handle_response(n, message)
+            
+        elif message["y"] == "e":
+            print("kprc error:", message["e"])
         
 
     def handle_query(self, node, message):
@@ -73,7 +95,8 @@ class DHT(object):
     def __init__(self, host, port, id=None):
         if not id:
             id = hashing.random_id()
-            id = hashing.hash_function("3123123")
+            
+        id = hashing.hash_function(id)
         self.node = node.Node(host, port, id)
         self.data = {}
         self.join_nodes = constants.BOOTSTRAP_NODES
@@ -109,7 +132,7 @@ class DHT(object):
 
 
     def iteractive_find_node(self, boot_node=None):
-        self.node.find_node(id, self.server.socket, boot_node)
+        self.node.find_node(self.node.id, self.server.socket, boot_node)
 
 
 class Findlist(object):
@@ -131,5 +154,12 @@ class Findlist(object):
             
 
 if __name__ == "__main__":
-    HOST, PORT = "", 6881
-    DHT(HOST, PORT)
+    count = 100
+    ids = hashing.create_ids(count)
+    ports = [p for p in range(6800, 6800+count)]
+    address = list(zip(ids, ports))
+
+    for id, port in address:
+        HOST, PORT = "", port
+        d = threading.Timer(2, DHT, (HOST, PORT, id))
+        d.start()
